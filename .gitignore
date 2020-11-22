@@ -1,0 +1,12 @@
+# Intellij
+*.iml
+.idea
+
+# npm
+node_modules
+package-lock.json
+
+# build
+main.ts
+data.json
+*.js.map
