@@ -4,29 +4,37 @@ export default class SystemDarkMode extends Plugin {
 
 	async onload() {
 
-  // Watch for system changes to color theme 
+    // Watch for system changes to color theme 
 
-  window.matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', event => {
-    if (event.matches) {
-      console.log('Dark mode active');
-      this.updateDarkStyle()
+    let media = window.matchMedia('(prefers-color-scheme: dark)');
 
-    } else {
-      console.log('Light mode active');
-      this.updateLightStyle()
+    let callback = () => {
+      if (media.matches) {
+        console.log('Dark mode active');
+        this.updateDarkStyle()
+
+      } else {
+        console.log('Light mode active');
+        this.updateLightStyle()
+      }
     }
-  })
+    media.addEventListener('change', callback);
 
-  this.enableSystemTheme();
+    // Remove listener when we unload
 
-}
+    this.register(() => media.removeEventListener('change', callback));
 
-  enableSystemTheme = () => {
+  }
+
+  onunload() {
+    console.log('System color scheme checking is turned off');
+  }
+
+  enableSystemTheme() {
     (this.app.workspace as any).layoutReady ? this.refreshSystemTheme() : this.app.workspace.on('layout-ready', this.refreshSystemTheme);
   }
 
-  refreshSystemTheme = () => {
+  refreshSystemTheme() {
     const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
     if(isDarkMode){
@@ -39,13 +47,13 @@ export default class SystemDarkMode extends Plugin {
       }
   }
 
-  updateDarkStyle = () => {
+  updateDarkStyle() {
   	document.body.removeClass('theme-light');
     document.body.addClass('theme-dark');
     this.app.workspace.trigger('css-change');
   }
 
-  updateLightStyle = () => {
+  updateLightStyle() {
   	document.body.removeClass('theme-dark');
     document.body.addClass('theme-light');
     this.app.workspace.trigger('css-change');
