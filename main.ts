@@ -2,7 +2,7 @@ import { App, Workspace, Modal, Notice, Plugin, PluginSettingTab, Setting } from
 
 export default class SystemDarkMode extends Plugin {
 
-	async onload() {
+  async onload() {
 
     // Watch for system changes to color theme 
 
@@ -23,7 +23,8 @@ export default class SystemDarkMode extends Plugin {
     // Remove listener when we unload
 
     this.register(() => media.removeEventListener('change', callback));
-
+    
+    callback();
   }
 
   onunload() {
@@ -48,13 +49,13 @@ export default class SystemDarkMode extends Plugin {
   }
 
   updateDarkStyle() {
-  	document.body.removeClass('theme-light');
+    document.body.removeClass('theme-light');
     document.body.addClass('theme-dark');
     this.app.workspace.trigger('css-change');
   }
 
   updateLightStyle() {
-  	document.body.removeClass('theme-dark');
+    document.body.removeClass('theme-dark');
     document.body.addClass('theme-light');
     this.app.workspace.trigger('css-change');
   }
