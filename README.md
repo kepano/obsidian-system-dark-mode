@@ -2,8 +2,7 @@ When this plugin is on, Obsidian will automatically use the operating system set
 
 ## Support my work
 
-- [@kepano on Patreon](https://www.patreon.com/kepano)
-- [@kepano on Twitter](https://www.twitter.com/kepano)
+Support the development of my plugins and themes **@kepano** on [Twitter](https://www.twitter.com/kepano), [Patreon](https://www.patreon.com/kepano) or [Buy me a coffee](https://www.buymeacoffee.com/kepano).
 
 ## Related plugins
 
