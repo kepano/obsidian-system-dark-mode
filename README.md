@@ -1,3 +1,5 @@
+## Overview
+
 When this plugin is on, Obsidian will automatically use the operating system setting for light vs. dark mode. On newer operating systems this allows you to automatically switch based on time of day, and match your other apps.
 
 ## Support my work
