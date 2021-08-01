@@ -31,10 +31,6 @@ export default class SystemDarkMode extends Plugin {
     console.log('System color scheme checking is turned off');
   }
 
-  enableSystemTheme() {
-    (this.app.workspace as any).layoutReady ? this.refreshSystemTheme() : this.app.workspace.on('layout-ready', this.refreshSystemTheme);
-  }
-
   refreshSystemTheme() {
     const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
@@ -49,14 +45,18 @@ export default class SystemDarkMode extends Plugin {
   }
 
   updateDarkStyle() {
-    document.body.removeClass('theme-light');
-    document.body.addClass('theme-dark');
+    // @ts-ignore
+    this.app.setTheme('obsidian');
+    // @ts-ignore
+    this.app.vault.setConfig('theme', 'obsidian');
     this.app.workspace.trigger('css-change');
   }
 
   updateLightStyle() {
-    document.body.removeClass('theme-dark');
-    document.body.addClass('theme-light');
+    // @ts-ignore
+    this.app.setTheme('moonstone');
+    // @ts-ignore
+    this.app.vault.setConfig('theme', 'moonstone');
     this.app.workspace.trigger('css-change');
   }
 
