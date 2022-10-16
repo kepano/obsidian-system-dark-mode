@@ -1,63 +1,35 @@
-import { App, Workspace, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { Plugin } from "obsidian";
 
 export default class SystemDarkMode extends Plugin {
+	async onload() {
+		// Watch for system changes to color theme
+		const media = window.matchMedia("(prefers-color-scheme: dark)");
 
-  async onload() {
+		const callback = () => {
+			if (media.matches) {
+				console.log("Dark mode active");
+				this.updateStyle(true);
+			} else {
+				console.log("Light mode active");
+				this.updateStyle(false);
+			}
+		};
 
-    // Watch for system changes to color theme 
+		media.addEventListener("change", callback);
 
-    let media = window.matchMedia('(prefers-color-scheme: dark)');
+		// Remove listener when we unload
+		this.register(() => media.removeEventListener("change", callback));
 
-    let callback = () => {
-      if (media.matches) {
-        console.log('Dark mode active');
-        this.updateDarkStyle()
+		callback();
+	}
 
-      } else {
-        console.log('Light mode active');
-        this.updateLightStyle()
-      }
-    }
-    media.addEventListener('change', callback);
+	updateStyle(isDark: boolean) {
+		const theme = isDark ? "obsidian" : "moonstone";
 
-    // Remove listener when we unload
-
-    this.register(() => media.removeEventListener('change', callback));
-    
-    callback();
-  }
-
-  onunload() {
-    console.log('System color scheme checking is turned off');
-  }
-
-  refreshSystemTheme() {
-    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-
-    if(isDarkMode){
-        console.log('Dark mode active');
-        this.updateDarkStyle()
-
-      } else {
-        console.log('Light mode active');
-        this.updateLightStyle()
-      }
-  }
-
-  updateDarkStyle() {
-    // @ts-ignore
-    this.app.setTheme('obsidian');
-    // @ts-ignore
-    this.app.vault.setConfig('theme', 'obsidian');
-    this.app.workspace.trigger('css-change');
-  }
-
-  updateLightStyle() {
-    // @ts-ignore
-    this.app.setTheme('moonstone');
-    // @ts-ignore
-    this.app.vault.setConfig('theme', 'moonstone');
-    this.app.workspace.trigger('css-change');
-  }
-
+		// @ts-ignore
+		this.app.setTheme(theme);
+		// @ts-ignore
+		this.app.vault.setConfig("theme", theme);
+		this.app.workspace.trigger("css-change");
+	}
 }
