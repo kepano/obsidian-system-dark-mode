@@ -1,4 +1,5 @@
 import { Plugin } from "obsidian";
+const { nativeTheme } = require('electron').remote;
 
 export default class SystemDarkMode extends Plugin {
 	async onload() {
@@ -6,30 +7,38 @@ export default class SystemDarkMode extends Plugin {
 		const media = window.matchMedia("(prefers-color-scheme: dark)");
 
 		const callback = () => {
-			if (media.matches) {
+			if (media.matches || nativeTheme.shouldUseDarkColors) {
 				console.log("Dark mode active");
-				this.updateStyle(true);
+				this.updateDarkStyle();
 			} else {
 				console.log("Light mode active");
-				this.updateStyle(false);
+				this.updateLightStyle();
 			}
 		};
 
-		media.addEventListener("change", callback);
+		const eventRef = nativeTheme.on('updated', callback);
+		this.register(() => nativeTheme.off('updated', callback));
 
+		media.addEventListener("change", callback);
 		// Remove listener when we unload
 		this.register(() => media.removeEventListener("change", callback));
 
 		callback();
 	}
 
-	updateStyle(isDark: boolean) {
-		const theme = isDark ? "obsidian" : "moonstone";
-
+	updateDarkStyle() {
 		// @ts-ignore
-		this.app.setTheme(theme);
+		this.app.setTheme('obsidian');
 		// @ts-ignore
-		this.app.vault.setConfig("theme", theme);
-		this.app.workspace.trigger("css-change");
+		this.app.vault.setConfig('theme', 'obsidian');
+		this.app.workspace.trigger('css-change');
+	}
+	
+	updateLightStyle() {
+		// @ts-ignore
+		this.app.setTheme('moonstone');
+		// @ts-ignore
+		this.app.vault.setConfig('theme', 'moonstone');
+			this.app.workspace.trigger('css-change');
 	}
 }
